@@ -4,8 +4,11 @@
 //! [`embedded-hal`]: https://github.com/rust-embedded/embedded-hal
 //!
 //! This driver allows you to:
-//! - Set a channel to a position.
-//! - Shutdown a channel.
+//! - Set a channel to a position. See: [`set_position()`].
+//! - Shutdown a channel. See: [`shutdown()`].
+//!
+//! [`set_position()`]: struct.Mcp4x.html#method.set_position
+//! [`shutdown()`]: struct.Mcp4x.html#method.shutdown
 //!
 //! ## The devices
 //! The MCP41XXX and MCP42XXX devices are 256-position, digital potentiometers
@@ -35,7 +38,7 @@
 
 #![deny(unsafe_code)]
 #![deny(missing_docs)]
-// TODO #![deny(warnings)]
+#![deny(warnings)]
 #![no_std]
 
 use core::marker::PhantomData;

@@ -12,8 +12,8 @@ digital potentiometers (digipot), based on the [`embedded-hal`] traits.
 [`embedded-hal`]: https://github.com/rust-embedded/embedded-hal
 
 This driver allows you to:
-- Set a channel to a position.
-- Shutdown a channel.
+- Set a channel to a position. See: `set_position()`.
+- Shutdown a channel. See: `shutdown()`.
 
 ## The devices
 The MCP41XXX and MCP42XXX devices are 256-position, digital potentiometers
