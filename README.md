@@ -40,6 +40,35 @@ on the MCP42XXX varies by less than 1%.
 Datasheet:
 - [MCP41XXX/MCP42XXX](http://ww1.microchip.com/downloads/en/DeviceDoc/11195c.pdf)
 
+## Usage
+
+To use this driver, import this crate and an `embedded_hal` implementation,
+then instantiate the appropriate device.
+In the following examples an instance of the device MCP41x will be created
+as an example. Other devices can be created with similar methods like:
+`Mcp4x::new_mcp42x(...)`.
+
+```rust
+extern crate embedded_hal;
+extern crate linux_embedded_hal;
+extern crate mcp4x;
+
+use mcp4x::{Channel, Mcp4x};
+use linux_embedded_hal::{Pin, Spidev};
+
+fn main() {
+    let spi = Spidev::open("/dev/spidev0.0").unwrap();
+    let chip_select = Pin::new(25);
+
+    let mut mcp41x = Mcp4x::new_mcp41x(spi, chip_select);
+
+    mcp41x.set_position(Channel::Ch0, 50).unwrap();
+
+    // Get SPI device and CS pin back
+    let (_spi, _chip_select) = mcp41x.destroy_mcp41x();
+}
+```
+
 ## License
 
 Licensed under either of
