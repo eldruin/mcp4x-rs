@@ -48,6 +48,10 @@ In the following examples an instance of the device MCP41x will be created
 as an example. Other devices can be created with similar methods like:
 `Mcp4x::new_mcp42x(...)`.
 
+Please find additional examples in this repository: [mcp4x-examples]
+
+[mcp4x-examples]: https://github.com/eldruin/mcp4x-examples
+
 ```rust
 extern crate embedded_hal;
 extern crate linux_embedded_hal;

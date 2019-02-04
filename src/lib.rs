@@ -35,6 +35,16 @@
 //! Datasheet:
 //! - [MCP41XXX/MCP42XXX](http://ww1.microchip.com/downloads/en/DeviceDoc/11195c.pdf)
 //!
+//!
+//! ## Usage examples (see also examples folder)
+//!
+//! To use this driver, import this crate and an `embedded_hal` implementation,
+//! then instantiate the appropriate device.
+//!
+//! Please find additional examples in this repository: [mcp4x-examples]
+//!
+//! [mcp4x-examples]: https://github.com/eldruin/mcp4x-examples
+//!
 
 #![deny(unsafe_code)]
 #![deny(missing_docs)]
