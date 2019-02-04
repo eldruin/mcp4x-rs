@@ -32,6 +32,9 @@
 //! daisy-chaining of multiple devices. Channel-to-channel resistance matching
 //! on the MCP42XXX varies by less than 1%.
 //!
+//! This driver should be compatible at least with the devices: MCP41010, MCP41050,
+//! MCP41100, MCP42010, MCP42050 and MCP42100.
+//!
 //! Datasheet:
 //! - [MCP41XXX/MCP42XXX](http://ww1.microchip.com/downloads/en/DeviceDoc/11195c.pdf)
 //!
