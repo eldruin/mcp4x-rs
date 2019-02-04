@@ -1,6 +1,6 @@
 extern crate embedded_hal;
 extern crate mcp4x;
-use mcp4x::{ic, interface, Channel, Mcp4x};
+use mcp4x::{ic, interface, Channel, Error, Mcp4x};
 extern crate embedded_hal_mock as hal;
 use self::hal::spi::{Mock as SpiMock, Transaction as SpiTrans};
 
@@ -54,3 +54,35 @@ test!(
     0,
     Channel::Ch0
 );
+
+fn assert_wrong_channel<T, E>(result: Result<T, Error<E>>) {
+    match result {
+        Err(Error::WrongChannel) => (),
+        _ => panic!("Wrong channel not reported."),
+    }
+}
+
+#[test]
+fn wrong_channel_matches() {
+    assert_wrong_channel::<(), ()>(Err(Error::WrongChannel));
+}
+
+#[should_panic]
+#[test]
+fn wrong_channel_can_fail() {
+    assert_wrong_channel::<(), ()>(Ok(()));
+}
+
+#[test]
+fn shutdown_cannot_provide_invalid_channel() {
+    let mut dev = new_mcp41x(&[]);
+    assert_wrong_channel(dev.shutdown(Channel::Ch1));
+    dev.destroy_mcp41x().0.done();
+}
+
+#[test]
+fn set_position_cannot_provide_invalid_channel() {
+    let mut dev = new_mcp41x(&[]);
+    assert_wrong_channel(dev.set_position(Channel::Ch1, 0));
+    dev.destroy_mcp41x().0.done();
+}

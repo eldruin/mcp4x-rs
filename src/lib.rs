@@ -62,6 +62,8 @@ extern crate embedded_hal as hal;
 pub enum Error<E> {
     /// Communication error
     Comm(E),
+    /// Wrong channel for this device provided
+    WrongChannel,
 }
 
 /// Channel selector
@@ -110,6 +112,21 @@ pub mod ic {
     pub struct Mcp41x(());
 }
 
+#[doc(hidden)]
+pub trait CheckChannel<E>: private::Sealed {
+    fn check_if_channel_is_appropriate(channel: Channel) -> Result<(), Error<E>>;
+}
+
+impl<E> CheckChannel<E> for ic::Mcp41x {
+    fn check_if_channel_is_appropriate(channel: Channel) -> Result<(), Error<E>> {
+        if channel == Channel::Ch0 {
+            Ok(())
+        } else {
+            Err(Error::WrongChannel)
+        }
+    }
+}
+
 /// MCP4x digital potentiometer driver
 #[derive(Debug, Default)]
 pub struct Mcp4x<DI, IC> {
@@ -120,10 +137,11 @@ pub struct Mcp4x<DI, IC> {
 impl<DI, IC, E> Mcp4x<DI, IC>
 where
     DI: interface::WriteCommand<Error = E>,
+    IC: CheckChannel<E>,
 {
     /// Set a channel to a position
     pub fn set_position(&mut self, channel: Channel, position: u8) -> Result<(), Error<E>> {
-        // TODO check channel is appropriate for IC
+        IC::check_if_channel_is_appropriate(channel)?;
         let cmd = Command::SetPosition(channel, position);
         self.iface
             .write_command(cmd.get_command_byte(), cmd.get_data_byte())
@@ -131,7 +149,7 @@ where
 
     /// Shutdown a channel
     pub fn shutdown(&mut self, channel: Channel) -> Result<(), Error<E>> {
-        // TODO check channel is appropriate for IC
+        IC::check_if_channel_is_appropriate(channel)?;
         let cmd = Command::Shutdown(channel);
         self.iface
             .write_command(cmd.get_command_byte(), cmd.get_data_byte())
@@ -160,10 +178,11 @@ impl<SPI, CS> Mcp4x<interface::SpiInterface<SPI, CS>, ic::Mcp41x> {
 pub mod interface;
 
 mod private {
-    use super::interface;
+    use super::{ic, interface};
     pub trait Sealed {}
 
     impl<SPI, CS> Sealed for interface::SpiInterface<SPI, CS> {}
+    impl Sealed for ic::Mcp41x {}
 }
 
 #[cfg(test)]
