@@ -106,20 +106,22 @@ pub struct Mcp4x<DI, IC> {
 
 impl<DI, IC, E> Mcp4x<DI, IC>
 where
-    DI: interface::WriteCommand<Error = E>
+    DI: interface::WriteCommand<Error = E>,
 {
     /// Set a channel to a position
     pub fn set_position(&mut self, channel: Channel, position: u8) -> Result<(), Error<E>> {
         // TODO check channel is appropriate for IC
         let cmd = Command::SetPosition(channel, position);
-        self.iface.write_command(cmd.get_command_byte(), cmd.get_data_byte())
+        self.iface
+            .write_command(cmd.get_command_byte(), cmd.get_data_byte())
     }
 
     /// Shutdown a channel
     pub fn shutdown(&mut self, channel: Channel) -> Result<(), Error<E>> {
         // TODO check channel is appropriate for IC
         let cmd = Command::Shutdown(channel);
-        self.iface.write_command(cmd.get_command_byte(), cmd.get_data_byte())
+        self.iface
+            .write_command(cmd.get_command_byte(), cmd.get_data_byte())
     }
 }
 
@@ -129,7 +131,7 @@ impl<SPI, CS> Mcp4x<interface::SpiInterface<SPI, CS>, ic::Mcp41x> {
         Mcp4x {
             iface: interface::SpiInterface {
                 spi,
-                cs: chip_select
+                cs: chip_select,
             },
             _ic: PhantomData,
         }

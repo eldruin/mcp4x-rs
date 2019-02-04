@@ -1,8 +1,8 @@
 extern crate embedded_hal;
 extern crate mcp4x;
-use mcp4x::{ Channel, Mcp4x, interface, ic };
+use mcp4x::{ic, interface, Channel, Mcp4x};
 extern crate embedded_hal_mock as hal;
-use self::hal::spi::{ Mock as SpiMock, Transaction as SpiTrans };
+use self::hal::spi::{Mock as SpiMock, Transaction as SpiTrans};
 
 pub struct DummyOutputPin;
 
@@ -11,8 +11,9 @@ impl embedded_hal::digital::OutputPin for DummyOutputPin {
     fn set_high(&mut self) {}
 }
 
-pub fn new_mcp41x(transactions: &[SpiTrans])
-    -> Mcp4x<interface::SpiInterface<SpiMock, DummyOutputPin>, ic::Mcp41x> {
+pub fn new_mcp41x(
+    transactions: &[SpiTrans],
+) -> Mcp4x<interface::SpiInterface<SpiMock, DummyOutputPin>, ic::Mcp41x> {
     Mcp4x::new_mcp41x(SpiMock::new(&transactions), DummyOutputPin)
 }
 
@@ -34,5 +35,22 @@ macro_rules! test {
     };
 }
 
-test!(set_position_ch0, set_position, new_mcp41x, destroy_mcp41x, 0b0001_0001, 50, Channel::Ch0, 50);
-test!(shutdown_ch0, shutdown, new_mcp41x, destroy_mcp41x, 0b0010_0001, 0, Channel::Ch0);
+test!(
+    set_position_ch0,
+    set_position,
+    new_mcp41x,
+    destroy_mcp41x,
+    0b0001_0001,
+    50,
+    Channel::Ch0,
+    50
+);
+test!(
+    shutdown_ch0,
+    shutdown,
+    new_mcp41x,
+    destroy_mcp41x,
+    0b0010_0001,
+    0,
+    Channel::Ch0
+);
