@@ -110,6 +110,8 @@ impl Command {
 pub mod ic {
     /// MCP41x IC marker
     pub struct Mcp41x(());
+    /// MCP42x IC marker
+    pub struct Mcp42x(());
 }
 
 #[doc(hidden)]
@@ -124,6 +126,12 @@ impl<E> CheckChannel<E> for ic::Mcp41x {
         } else {
             Err(Error::WrongChannel)
         }
+    }
+}
+
+impl<E> CheckChannel<E> for ic::Mcp42x {
+    fn check_if_channel_is_appropriate(_: Channel) -> Result<(), Error<E>> {
+        Ok(())
     }
 }
 
@@ -174,6 +182,24 @@ impl<SPI, CS> Mcp4x<interface::SpiInterface<SPI, CS>, ic::Mcp41x> {
     }
 }
 
+impl<SPI, CS> Mcp4x<interface::SpiInterface<SPI, CS>, ic::Mcp42x> {
+    /// Create new MCP42x device instance
+    pub fn new_mcp42x(spi: SPI, chip_select: CS) -> Self {
+        Mcp4x {
+            iface: interface::SpiInterface {
+                spi,
+                cs: chip_select,
+            },
+            _ic: PhantomData,
+        }
+    }
+
+    /// Destroy driver instance, return SPI bus instance and CS output pin.
+    pub fn destroy_mcp42x(self) -> (SPI, CS) {
+        (self.iface.spi, self.iface.cs)
+    }
+}
+
 #[doc(hidden)]
 pub mod interface;
 
@@ -183,6 +209,7 @@ mod private {
 
     impl<SPI, CS> Sealed for interface::SpiInterface<SPI, CS> {}
     impl Sealed for ic::Mcp41x {}
+    impl Sealed for ic::Mcp42x {}
 }
 
 #[cfg(test)]

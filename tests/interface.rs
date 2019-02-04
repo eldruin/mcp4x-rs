@@ -26,6 +26,7 @@ macro_rules! device_support {
 }
 
 device_support!(new_mcp41x, destroy_mcp41x, Mcp41x);
+device_support!(new_mcp42x, destroy_mcp42x, Mcp42x);
 
 #[macro_export]
 macro_rules! test {
@@ -43,6 +44,7 @@ macro_rules! test {
 
 mod mcp41x {
     use super::*;
+
     test!(
         set_position_ch0,
         set_position,
@@ -94,4 +96,50 @@ mod mcp41x {
         assert_wrong_channel(dev.set_position(Channel::Ch1, 0));
         dev.destroy_mcp41x().0.done();
     }
+}
+
+mod mcp42x {
+    use super::*;
+
+    test!(
+        set_position_ch0,
+        set_position,
+        new_mcp42x,
+        destroy_mcp42x,
+        0b0001_0001,
+        50,
+        Channel::Ch0,
+        50
+    );
+
+    test!(
+        set_position_ch1,
+        set_position,
+        new_mcp42x,
+        destroy_mcp42x,
+        0b0001_0010,
+        50,
+        Channel::Ch1,
+        50
+    );
+
+    test!(
+        shutdown_ch0,
+        shutdown,
+        new_mcp42x,
+        destroy_mcp42x,
+        0b0010_0001,
+        0,
+        Channel::Ch0
+    );
+
+    test!(
+        shutdown_ch1,
+        shutdown,
+        new_mcp42x,
+        destroy_mcp42x,
+        0b0010_0010,
+        0,
+        Channel::Ch1
+    );
 }
