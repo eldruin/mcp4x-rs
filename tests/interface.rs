@@ -11,15 +11,21 @@ impl embedded_hal::digital::OutputPin for DummyOutputPin {
     fn set_high(&mut self) {}
 }
 
-pub fn new_mcp41x(
-    transactions: &[SpiTrans],
-) -> Mcp4x<interface::SpiInterface<SpiMock, DummyOutputPin>, ic::Mcp41x> {
-    Mcp4x::new_mcp41x(SpiMock::new(&transactions), DummyOutputPin)
+macro_rules! device_support {
+    ($create:ident, $destroy:ident, $ic:ident) => {
+        pub fn $create(
+            transactions: &[SpiTrans],
+        ) -> Mcp4x<interface::SpiInterface<SpiMock, DummyOutputPin>, ic::$ic> {
+            Mcp4x::$create(SpiMock::new(&transactions), DummyOutputPin)
+        }
+
+        pub fn $destroy(dev: Mcp4x<interface::SpiInterface<SpiMock, DummyOutputPin>, ic::$ic>) {
+            dev.$destroy().0.done();
+        }
+    };
 }
 
-pub fn destroy_mcp41x(dev: Mcp4x<interface::SpiInterface<SpiMock, DummyOutputPin>, ic::Mcp41x>) {
-    dev.destroy_mcp41x().0.done();
-}
+device_support!(new_mcp41x, destroy_mcp41x, Mcp41x);
 
 #[macro_export]
 macro_rules! test {
