@@ -35,54 +35,57 @@ macro_rules! test {
     };
 }
 
-test!(
-    set_position_ch0,
-    set_position,
-    new_mcp41x,
-    destroy_mcp41x,
-    0b0001_0001,
-    50,
-    Channel::Ch0,
-    50
-);
-test!(
-    shutdown_ch0,
-    shutdown,
-    new_mcp41x,
-    destroy_mcp41x,
-    0b0010_0001,
-    0,
-    Channel::Ch0
-);
+mod mcp41x {
+    use super::*;
+    test!(
+        set_position_ch0,
+        set_position,
+        new_mcp41x,
+        destroy_mcp41x,
+        0b0001_0001,
+        50,
+        Channel::Ch0,
+        50
+    );
+    test!(
+        shutdown_ch0,
+        shutdown,
+        new_mcp41x,
+        destroy_mcp41x,
+        0b0010_0001,
+        0,
+        Channel::Ch0
+    );
 
-fn assert_wrong_channel<T, E>(result: Result<T, Error<E>>) {
-    match result {
-        Err(Error::WrongChannel) => (),
-        _ => panic!("Wrong channel not reported."),
+    fn assert_wrong_channel<T, E>(result: Result<T, Error<E>>) {
+        match result {
+            Err(Error::WrongChannel) => (),
+            _ => panic!("Wrong channel not reported."),
+        }
     }
-}
 
-#[test]
-fn wrong_channel_matches() {
-    assert_wrong_channel::<(), ()>(Err(Error::WrongChannel));
-}
+    #[test]
+    fn wrong_channel_matches() {
+        assert_wrong_channel::<(), ()>(Err(Error::WrongChannel));
+    }
 
-#[should_panic]
-#[test]
-fn wrong_channel_can_fail() {
-    assert_wrong_channel::<(), ()>(Ok(()));
-}
+    #[should_panic]
+    #[test]
+    fn wrong_channel_can_fail() {
+        assert_wrong_channel::<(), ()>(Ok(()));
+    }
 
-#[test]
-fn shutdown_cannot_provide_invalid_channel() {
-    let mut dev = new_mcp41x(&[]);
-    assert_wrong_channel(dev.shutdown(Channel::Ch1));
-    dev.destroy_mcp41x().0.done();
-}
+    #[test]
+    fn shutdown_cannot_provide_invalid_channel() {
+        let mut dev = new_mcp41x(&[]);
+        assert_wrong_channel(dev.shutdown(Channel::Ch1));
+        dev.destroy_mcp41x().0.done();
+    }
 
-#[test]
-fn set_position_cannot_provide_invalid_channel() {
-    let mut dev = new_mcp41x(&[]);
-    assert_wrong_channel(dev.set_position(Channel::Ch1, 0));
-    dev.destroy_mcp41x().0.done();
+    #[test]
+    fn set_position_cannot_provide_invalid_channel() {
+        let mut dev = new_mcp41x(&[]);
+        assert_wrong_channel(dev.set_position(Channel::Ch1, 0));
+        dev.destroy_mcp41x().0.done();
+    }
 }
