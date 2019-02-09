@@ -8,3 +8,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 
 ...
+
+## 0.1.0 - 2019-02-09
+
+This is the initial release to crates.io. All changes will be documented in
+this CHANGELOG.
+
+[Unreleased]: https://github.com/eldruin/mcp4x-rs/compare/v0.1.0...HEAD
