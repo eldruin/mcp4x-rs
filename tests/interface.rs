@@ -1,4 +1,3 @@
-extern crate embedded_hal;
 extern crate mcp4x;
 use mcp4x::{ic, interface, Channel, Error, Mcp4x};
 extern crate embedded_hal_mock as hal;
