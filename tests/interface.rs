@@ -65,7 +65,7 @@ mod mcp41x {
         Channel::Ch0
     );
 
-    fn assert_wrong_channel<T, E>(result: Result<T, Error<E>>) {
+    fn assert_wrong_channel<T, E>(result: &Result<T, Error<E>>) {
         match result {
             Err(Error::WrongChannel) => (),
             _ => panic!("Wrong channel not reported."),
@@ -74,26 +74,26 @@ mod mcp41x {
 
     #[test]
     fn wrong_channel_matches() {
-        assert_wrong_channel::<(), ()>(Err(Error::WrongChannel));
+        assert_wrong_channel::<(), ()>(&Err(Error::WrongChannel));
     }
 
     #[should_panic]
     #[test]
     fn wrong_channel_can_fail() {
-        assert_wrong_channel::<(), ()>(Ok(()));
+        assert_wrong_channel::<(), ()>(&Ok(()));
     }
 
     #[test]
     fn shutdown_cannot_provide_invalid_channel() {
         let mut dev = new_mcp41x(&[]);
-        assert_wrong_channel(dev.shutdown(Channel::Ch1));
+        assert_wrong_channel(&dev.shutdown(Channel::Ch1));
         dev.destroy_mcp41x().0.done();
     }
 
     #[test]
     fn set_position_cannot_provide_invalid_channel() {
         let mut dev = new_mcp41x(&[]);
-        assert_wrong_channel(dev.set_position(Channel::Ch1, 0));
+        assert_wrong_channel(&dev.set_position(Channel::Ch1, 0));
         dev.destroy_mcp41x().0.done();
     }
 }
