@@ -208,7 +208,10 @@ where
     DI: interface::WriteCommand<Error = E>,
     IC: CheckChannel<E>,
 {
-    /// Set a channel to a position
+    /// Set a channel to a position.
+    ///
+    /// Will return `Error::WrongChannel` if the channel provided is not available
+    /// on the device.
     pub fn set_position(&mut self, channel: Channel, position: u8) -> Result<(), Error<E>> {
         IC::check_if_channel_is_appropriate(channel)?;
         let cmd = Command::SetPosition(channel, position);
@@ -216,7 +219,10 @@ where
             .write_command(cmd.get_command_byte(), cmd.get_data_byte())
     }
 
-    /// Shutdown a channel
+    /// Shutdown a channel.
+    ///
+    /// Will return `Error::WrongChannel` if the channel provided is not available
+    /// on the device.
     pub fn shutdown(&mut self, channel: Channel) -> Result<(), Error<E>> {
         IC::check_if_channel_is_appropriate(channel)?;
         let cmd = Command::Shutdown(channel);
