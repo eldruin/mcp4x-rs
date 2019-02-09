@@ -90,6 +90,25 @@
 //! # }
 //! ```
 //!
+//! ### Set all channels to position in a MCP42x device
+//!
+//! ```no_run
+//! extern crate embedded_hal;
+//! extern crate linux_embedded_hal;
+//! extern crate mcp4x;
+//! use mcp4x::{Channel, Mcp4x};
+//! use linux_embedded_hal::{Pin, Spidev};
+//!
+//! # fn main() {
+//! let spi = Spidev::open("/dev/spidev0.0").unwrap();
+//! let chip_select = Pin::new(25);
+//!
+//! let mut mcp42x = Mcp4x::new_mcp42x(spi, chip_select);
+//!
+//! mcp42x.set_position(Channel::All, 50).unwrap();
+//! # }
+//! ```
+//!
 //! ### Shutdown a channel
 //!
 //! ```no_run
