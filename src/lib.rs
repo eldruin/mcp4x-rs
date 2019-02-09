@@ -86,7 +86,7 @@
 //! let mut mcp42x = Mcp4x::new_mcp42x(spi, chip_select);
 //!
 //! mcp42x.set_position(Channel::Ch0, 50).unwrap();
-//! mcp42x.set_position(Channel::Ch0, 50).unwrap();
+//! mcp42x.set_position(Channel::Ch1, 50).unwrap();
 //! # }
 //! ```
 //!
