@@ -117,6 +117,7 @@
 
 use core::marker::PhantomData;
 extern crate embedded_hal as hal;
+use hal::spi::{Mode, Phase, Polarity};
 
 /// All possible errors in this crate
 #[derive(Debug)]
@@ -126,6 +127,12 @@ pub enum Error<E> {
     /// Wrong channel for this device provided
     WrongChannel,
 }
+
+/// SPI mode
+pub const MODE: Mode = Mode {
+    phase: Phase::CaptureOnFirstTransition,
+    polarity: Polarity::IdleLow,
+};
 
 /// Channel selector
 #[derive(Debug, Clone, Copy, PartialEq)]
