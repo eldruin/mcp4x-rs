@@ -141,6 +141,8 @@ pub enum Channel {
     Ch0,
     /// Channel 1 (only for MCP42XXX devices)
     Ch1,
+    /// Select all channels
+    All,
 }
 
 impl Channel {
@@ -148,6 +150,7 @@ impl Channel {
         match self {
             Channel::Ch0 => 1,
             Channel::Ch1 => 2,
+            Channel::All => 3,
         }
     }
 }
@@ -189,7 +192,7 @@ pub trait CheckChannel<E>: private::Sealed {
 
 impl<E> CheckChannel<E> for ic::Mcp41x {
     fn check_if_channel_is_appropriate(channel: Channel) -> Result<(), Error<E>> {
-        if channel == Channel::Ch0 {
+        if channel == Channel::Ch0 || channel == Channel::All {
             Ok(())
         } else {
             Err(Error::WrongChannel)

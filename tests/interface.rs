@@ -56,6 +56,17 @@ mod mcp41x {
         50
     );
     test!(
+        set_position_all,
+        set_position,
+        new_mcp41x,
+        destroy_mcp41x,
+        0b0001_0011,
+        50,
+        Channel::All,
+        50
+    );
+
+    test!(
         shutdown_ch0,
         shutdown,
         new_mcp41x,
@@ -63,6 +74,15 @@ mod mcp41x {
         0b0010_0001,
         0,
         Channel::Ch0
+    );
+    test!(
+        shutdown_all,
+        shutdown,
+        new_mcp41x,
+        destroy_mcp41x,
+        0b0010_0011,
+        0,
+        Channel::All
     );
 
     fn assert_wrong_channel<T, E>(result: &Result<T, Error<E>>) {
@@ -84,7 +104,7 @@ mod mcp41x {
     }
 
     #[test]
-    fn shutdown_cannot_provide_invalid_channel() {
+    fn shutdown_cannot_provide_invalid_channel_ch1() {
         let mut dev = new_mcp41x(&[]);
         assert_wrong_channel(&dev.shutdown(Channel::Ch1));
         dev.destroy_mcp41x().0.done();
@@ -124,6 +144,17 @@ mod mcp42x {
     );
 
     test!(
+        set_position_all,
+        set_position,
+        new_mcp42x,
+        destroy_mcp42x,
+        0b0001_0011,
+        50,
+        Channel::All,
+        50
+    );
+
+    test!(
         shutdown_ch0,
         shutdown,
         new_mcp42x,
@@ -141,5 +172,15 @@ mod mcp42x {
         0b0010_0010,
         0,
         Channel::Ch1
+    );
+
+    test!(
+        shutdown_all,
+        shutdown,
+        new_mcp42x,
+        destroy_mcp42x,
+        0b0010_0011,
+        0,
+        Channel::All
     );
 }
