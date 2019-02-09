@@ -44,9 +44,70 @@
 //! To use this driver, import this crate and an `embedded_hal` implementation,
 //! then instantiate the appropriate device.
 //!
-//! Please find additional examples in this repository: [mcp4x-examples]
+//! Please find additional examples in hardware in this repository: [mcp4x-examples]
 //!
 //! [mcp4x-examples]: https://github.com/eldruin/mcp4x-examples
+//!
+//! ### Set channel 0 to position 125 in a MCP41x device
+//!
+//! ```no_run
+//! extern crate embedded_hal;
+//! extern crate linux_embedded_hal;
+//! extern crate mcp4x;
+//! use mcp4x::{Channel, Mcp4x};
+//! use linux_embedded_hal::{Pin, Spidev};
+//!
+//! # fn main() {
+//! let spi = Spidev::open("/dev/spidev0.0").unwrap();
+//! let chip_select = Pin::new(25);
+//!
+//! let mut mcp41x = Mcp4x::new_mcp41x(spi, chip_select);
+//!
+//! mcp41x.set_position(Channel::Ch0, 125).unwrap();
+//!
+//! // Get SPI device and CS pin back
+//! let (_spi, _chip_select) = mcp41x.destroy_mcp41x();
+//! # }
+//! ```
+//!
+//! ### Set channels to positions in a MCP42x device
+//!
+//! ```no_run
+//! extern crate embedded_hal;
+//! extern crate linux_embedded_hal;
+//! extern crate mcp4x;
+//! use mcp4x::{Channel, Mcp4x};
+//! use linux_embedded_hal::{Pin, Spidev};
+//!
+//! # fn main() {
+//! let spi = Spidev::open("/dev/spidev0.0").unwrap();
+//! let chip_select = Pin::new(25);
+//!
+//! let mut mcp42x = Mcp4x::new_mcp42x(spi, chip_select);
+//!
+//! mcp42x.set_position(Channel::Ch0, 50).unwrap();
+//! mcp42x.set_position(Channel::Ch0, 50).unwrap();
+//! # }
+//! ```
+//!
+//! ### Shutdown a channel
+//!
+//! ```no_run
+//! extern crate embedded_hal;
+//! extern crate linux_embedded_hal;
+//! extern crate mcp4x;
+//! use mcp4x::{Channel, Mcp4x};
+//! use linux_embedded_hal::{Pin, Spidev};
+//!
+//! # fn main() {
+//! let spi = Spidev::open("/dev/spidev0.0").unwrap();
+//! let chip_select = Pin::new(25);
+//!
+//! let mut mcp42x = Mcp4x::new_mcp42x(spi, chip_select);
+//!
+//! mcp42x.shutdown(Channel::Ch0).unwrap();
+//! # }
+//! ```
 //!
 
 #![deny(unsafe_code)]
