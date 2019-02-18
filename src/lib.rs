@@ -44,9 +44,9 @@
 //! To use this driver, import this crate and an `embedded_hal` implementation,
 //! then instantiate the appropriate device.
 //!
-//! Please find additional examples in hardware in this repository: [mcp4x-examples]
+//! Please find additional examples using hardware in this repository: [driver-examples]
 //!
-//! [mcp4x-examples]: https://github.com/eldruin/mcp4x-examples
+//! [driver-examples]: https://github.com/eldruin/driver-examples
 //!
 //! ### Set channel 0 to position 125 in a MCP41x device
 //!
