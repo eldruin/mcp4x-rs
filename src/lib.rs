@@ -131,7 +131,6 @@
 
 #![deny(unsafe_code)]
 #![deny(missing_docs)]
-#![deny(warnings)]
 #![no_std]
 
 use core::marker::PhantomData;
