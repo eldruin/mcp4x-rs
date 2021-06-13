@@ -51,13 +51,9 @@
 //! ### Set channel 0 to position 125 in a MCP41x device
 //!
 //! ```no_run
-//! extern crate embedded_hal;
-//! extern crate linux_embedded_hal;
-//! extern crate mcp4x;
 //! use mcp4x::{Channel, Mcp4x};
 //! use linux_embedded_hal::{Pin, Spidev};
 //!
-//! # fn main() {
 //! let spi = Spidev::open("/dev/spidev0.0").unwrap();
 //! let chip_select = Pin::new(25);
 //!
@@ -67,19 +63,14 @@
 //!
 //! // Get SPI device and CS pin back
 //! let (_spi, _chip_select) = mcp41x.destroy_mcp41x();
-//! # }
 //! ```
 //!
 //! ### Set channels to positions in a MCP42x device
 //!
 //! ```no_run
-//! extern crate embedded_hal;
-//! extern crate linux_embedded_hal;
-//! extern crate mcp4x;
 //! use mcp4x::{Channel, Mcp4x};
 //! use linux_embedded_hal::{Pin, Spidev};
 //!
-//! # fn main() {
 //! let spi = Spidev::open("/dev/spidev0.0").unwrap();
 //! let chip_select = Pin::new(25);
 //!
@@ -87,45 +78,34 @@
 //!
 //! mcp42x.set_position(Channel::Ch0, 50).unwrap();
 //! mcp42x.set_position(Channel::Ch1, 50).unwrap();
-//! # }
 //! ```
 //!
 //! ### Set all channels to position in a MCP42x device
 //!
 //! ```no_run
-//! extern crate embedded_hal;
-//! extern crate linux_embedded_hal;
-//! extern crate mcp4x;
 //! use mcp4x::{Channel, Mcp4x};
 //! use linux_embedded_hal::{Pin, Spidev};
 //!
-//! # fn main() {
 //! let spi = Spidev::open("/dev/spidev0.0").unwrap();
 //! let chip_select = Pin::new(25);
 //!
 //! let mut mcp42x = Mcp4x::new_mcp42x(spi, chip_select);
 //!
 //! mcp42x.set_position(Channel::All, 50).unwrap();
-//! # }
 //! ```
 //!
 //! ### Shutdown a channel
 //!
 //! ```no_run
-//! extern crate embedded_hal;
-//! extern crate linux_embedded_hal;
-//! extern crate mcp4x;
 //! use mcp4x::{Channel, Mcp4x};
 //! use linux_embedded_hal::{Pin, Spidev};
 //!
-//! # fn main() {
 //! let spi = Spidev::open("/dev/spidev0.0").unwrap();
 //! let chip_select = Pin::new(25);
 //!
 //! let mut mcp42x = Mcp4x::new_mcp42x(spi, chip_select);
 //!
 //! mcp42x.shutdown(Channel::Ch0).unwrap();
-//! # }
 //! ```
 //!
 
@@ -134,8 +114,7 @@
 #![no_std]
 
 use core::marker::PhantomData;
-extern crate embedded_hal as hal;
-use hal::spi::{Mode, Phase, Polarity};
+use embedded_hal::spi::{Mode, MODE_0};
 
 /// All possible errors in this crate
 #[derive(Debug)]
@@ -149,10 +128,7 @@ pub enum Error<CommE, PinE> {
 }
 
 /// SPI mode
-pub const MODE: Mode = Mode {
-    phase: Phase::CaptureOnFirstTransition,
-    polarity: Polarity::IdleLow,
-};
+pub const MODE: Mode = MODE_0;
 
 /// Channel selector
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -200,9 +176,10 @@ impl Command {
 /// IC markers
 pub mod ic {
     /// MCP41x IC marker
-    pub struct Mcp41x(());
+    pub struct Mcp41x;
+
     /// MCP42x IC marker
-    pub struct Mcp42x(());
+    pub struct Mcp42x;
 }
 
 #[doc(hidden)]
@@ -301,7 +278,7 @@ impl<SPI, CS> Mcp4x<interface::SpiInterface<SPI, CS>, ic::Mcp42x> {
     }
 }
 
-#[doc(hidden)]
+/// Interface
 pub mod interface;
 
 mod private {

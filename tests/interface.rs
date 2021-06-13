@@ -1,8 +1,6 @@
-extern crate mcp4x;
+use embedded_hal_mock::pin::{Mock as PinMock, State as PinState, Transaction as PinTrans};
+use embedded_hal_mock::spi::{Mock as SpiMock, Transaction as SpiTrans};
 use mcp4x::{ic, interface, Channel, Error, Mcp4x};
-extern crate embedded_hal_mock as hal;
-use self::hal::pin::{Mock as PinMock, State as PinState, Transaction as PinTrans};
-use self::hal::spi::{Mock as SpiMock, Transaction as SpiTrans};
 
 macro_rules! device_support {
     ($create:ident, $destroy:ident, $ic:ident) => {

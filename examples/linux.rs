@@ -1,7 +1,3 @@
-extern crate embedded_hal;
-extern crate linux_embedded_hal;
-extern crate mcp4x;
-
 use linux_embedded_hal::{Pin, Spidev};
 use mcp4x::{Channel, Mcp4x};
 

@@ -56,10 +56,6 @@ Please find additional examples using hardware in this repository: [driver-examp
 [driver-examples]: https://github.com/eldruin/driver-examples
 
 ```rust
-extern crate embedded_hal;
-extern crate linux_embedded_hal;
-extern crate mcp4x;
-
 use mcp4x::{Channel, Mcp4x};
 use linux_embedded_hal::{Pin, Spidev};
 
