@@ -1,7 +1,7 @@
 //! SPI interface
 
-use crate::{private, Error};
 use crate::hal::{blocking::spi::Write, digital::v2::OutputPin};
+use crate::{private, Error};
 
 /// SPI interface
 #[derive(Debug, Default)]

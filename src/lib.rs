@@ -242,7 +242,11 @@ where
     ///
     /// Will return `Error::WrongChannel` if the channel provided is not available
     /// on the device.
-    pub fn set_position(&mut self, channel: Channel, position: u8) -> Result<(), Error<CommE, PinE>> {
+    pub fn set_position(
+        &mut self,
+        channel: Channel,
+        position: u8,
+    ) -> Result<(), Error<CommE, PinE>> {
         IC::check_if_channel_is_appropriate(channel)?;
         let cmd = Command::SetPosition(channel, position);
         self.iface
