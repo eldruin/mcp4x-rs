@@ -25,11 +25,11 @@ coveralls = { repository = "eldruin/mcp4x-rs", branch = "master", service = "git
 maintenance = { status = "actively-developed" }
 
 [dependencies]
-embedded-hal = "0.2"
+embedded-hal = "0.2.3"
 
 [dev-dependencies]
-linux-embedded-hal = "0.2"
-embedded-hal-mock = "0.4"
+linux-embedded-hal = "0.3"
+embedded-hal-mock = "0.7"
 
 [profile.release]
 lto = true

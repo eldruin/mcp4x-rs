@@ -2,23 +2,22 @@ extern crate mcp4x;
 use mcp4x::{ic, interface, Channel, Error, Mcp4x};
 extern crate embedded_hal_mock as hal;
 use self::hal::spi::{Mock as SpiMock, Transaction as SpiTrans};
+use self::hal::pin::{Mock as PinMock, State as PinState, Transaction as PinTrans};
 
-pub struct DummyOutputPin;
-
-impl embedded_hal::digital::OutputPin for DummyOutputPin {
-    fn set_low(&mut self) {}
-    fn set_high(&mut self) {}
-}
 
 macro_rules! device_support {
     ($create:ident, $destroy:ident, $ic:ident) => {
         pub fn $create(
             transactions: &[SpiTrans],
-        ) -> Mcp4x<interface::SpiInterface<SpiMock, DummyOutputPin>, ic::$ic> {
-            Mcp4x::$create(SpiMock::new(&transactions), DummyOutputPin)
+        ) -> Mcp4x<interface::SpiInterface<SpiMock, PinMock>, ic::$ic> {
+            let pin_transactions: Vec<PinTrans> = transactions
+                .iter()
+                .flat_map(|_| [PinTrans::set(PinState::Low), PinTrans::set(PinState::High)])
+                .collect();
+            Mcp4x::$create(SpiMock::new(transactions), PinMock::new(&pin_transactions))
         }
 
-        pub fn $destroy(dev: Mcp4x<interface::SpiInterface<SpiMock, DummyOutputPin>, ic::$ic>) {
+        pub fn $destroy(dev: Mcp4x<interface::SpiInterface<SpiMock, PinMock>, ic::$ic>) {
             dev.$destroy().0.done();
         }
     };
@@ -84,7 +83,7 @@ mod mcp41x {
         Channel::All
     );
 
-    fn assert_wrong_channel<T, E>(result: &Result<T, Error<E>>) {
+    fn assert_wrong_channel<T, CommE, PinE>(result: &Result<T, Error<CommE, PinE>>) {
         match result {
             Err(Error::WrongChannel) => (),
             _ => panic!("Wrong channel not reported."),
@@ -93,13 +92,13 @@ mod mcp41x {
 
     #[test]
     fn wrong_channel_matches() {
-        assert_wrong_channel::<(), ()>(&Err(Error::WrongChannel));
+        assert_wrong_channel::<(), (), ()>(&Err(Error::WrongChannel));
     }
 
     #[should_panic]
     #[test]
     fn wrong_channel_can_fail() {
-        assert_wrong_channel::<(), ()>(&Ok(()));
+        assert_wrong_channel::<(), (), ()>(&Ok(()));
     }
 
     #[test]

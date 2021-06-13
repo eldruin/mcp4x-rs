@@ -139,9 +139,11 @@ use hal::spi::{Mode, Phase, Polarity};
 
 /// All possible errors in this crate
 #[derive(Debug)]
-pub enum Error<E> {
+pub enum Error<CommE, PinE> {
     /// Communication error
-    Comm(E),
+    Comm(CommE),
+    /// Pin error
+    Pin(PinE),
     /// Wrong channel for this device provided
     WrongChannel,
 }
@@ -204,12 +206,12 @@ pub mod ic {
 }
 
 #[doc(hidden)]
-pub trait CheckChannel<E>: private::Sealed {
-    fn check_if_channel_is_appropriate(channel: Channel) -> Result<(), Error<E>>;
+pub trait CheckChannel<CommE, PinE>: private::Sealed {
+    fn check_if_channel_is_appropriate(channel: Channel) -> Result<(), Error<CommE, PinE>>;
 }
 
-impl<E> CheckChannel<E> for ic::Mcp41x {
-    fn check_if_channel_is_appropriate(channel: Channel) -> Result<(), Error<E>> {
+impl<CommE, PinE> CheckChannel<CommE, PinE> for ic::Mcp41x {
+    fn check_if_channel_is_appropriate(channel: Channel) -> Result<(), Error<CommE, PinE>> {
         if channel == Channel::Ch0 || channel == Channel::All {
             Ok(())
         } else {
@@ -218,8 +220,8 @@ impl<E> CheckChannel<E> for ic::Mcp41x {
     }
 }
 
-impl<E> CheckChannel<E> for ic::Mcp42x {
-    fn check_if_channel_is_appropriate(_: Channel) -> Result<(), Error<E>> {
+impl<CommE, PinE> CheckChannel<CommE, PinE> for ic::Mcp42x {
+    fn check_if_channel_is_appropriate(_: Channel) -> Result<(), Error<CommE, PinE>> {
         Ok(())
     }
 }
@@ -231,16 +233,16 @@ pub struct Mcp4x<DI, IC> {
     _ic: PhantomData<IC>,
 }
 
-impl<DI, IC, E> Mcp4x<DI, IC>
+impl<DI, IC, CommE, PinE> Mcp4x<DI, IC>
 where
-    DI: interface::WriteCommand<Error = E>,
-    IC: CheckChannel<E>,
+    DI: interface::WriteCommand<Error = Error<CommE, PinE>>,
+    IC: CheckChannel<CommE, PinE>,
 {
     /// Set a channel to a position.
     ///
     /// Will return `Error::WrongChannel` if the channel provided is not available
     /// on the device.
-    pub fn set_position(&mut self, channel: Channel, position: u8) -> Result<(), Error<E>> {
+    pub fn set_position(&mut self, channel: Channel, position: u8) -> Result<(), Error<CommE, PinE>> {
         IC::check_if_channel_is_appropriate(channel)?;
         let cmd = Command::SetPosition(channel, position);
         self.iface
@@ -251,7 +253,7 @@ where
     ///
     /// Will return `Error::WrongChannel` if the channel provided is not available
     /// on the device.
-    pub fn shutdown(&mut self, channel: Channel) -> Result<(), Error<E>> {
+    pub fn shutdown(&mut self, channel: Channel) -> Result<(), Error<CommE, PinE>> {
         IC::check_if_channel_is_appropriate(channel)?;
         let cmd = Command::Shutdown(channel);
         self.iface
