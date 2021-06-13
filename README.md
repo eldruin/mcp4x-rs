@@ -2,9 +2,8 @@
 
 [![crates.io](https://img.shields.io/crates/v/mcp4x.svg)](https://crates.io/crates/mcp4x)
 [![Docs](https://docs.rs/mcp4x/badge.svg)](https://docs.rs/mcp4x)
-[![Build Status](https://travis-ci.org/eldruin/mcp4x-rs.svg?branch=master)](https://travis-ci.org/eldruin/mcp4x-rs)
+[![Build Status](https://github.com/eldruin/mcp4x-rs/workflows/Build/badge.svg)](https://github.com/eldruin/mcp4x-rs/actions?query=workflow%3ABuild)
 [![Coverage Status](https://coveralls.io/repos/github/eldruin/mcp4x-rs/badge.svg?branch=master)](https://coveralls.io/github/eldruin/mcp4x-rs?branch=master)
-![Maintenance Intention](https://img.shields.io/badge/maintenance-actively--developed-brightgreen.svg)
 
 This is a platform-agnostic Rust driver for the MCP41xxx and MCP42xxx SPI
 digital potentiometers (digipot), based on the [`embedded-hal`] traits.
