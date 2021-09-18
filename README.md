@@ -2,6 +2,7 @@
 
 [![crates.io](https://img.shields.io/crates/v/mcp4x.svg)](https://crates.io/crates/mcp4x)
 [![Docs](https://docs.rs/mcp4x/badge.svg)](https://docs.rs/mcp4x)
+![Minimum Supported Rust Version](https://img.shields.io/badge/rustc-1.31+-blue.svg)
 [![Build Status](https://github.com/eldruin/mcp4x-rs/workflows/Build/badge.svg)](https://github.com/eldruin/mcp4x-rs/actions?query=workflow%3ABuild)
 [![Coverage Status](https://coveralls.io/repos/github/eldruin/mcp4x-rs/badge.svg?branch=master)](https://coveralls.io/github/eldruin/mcp4x-rs?branch=master)
 
