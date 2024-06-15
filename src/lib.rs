@@ -119,11 +119,9 @@ use embedded_hal::spi::{Mode, MODE_0};
 
 /// All possible errors in this crate
 #[derive(Debug)]
-pub enum Error<CommE, PinE> {
+pub enum Error<CommE> {
     /// Communication error
     Comm(CommE),
-    /// Pin error
-    Pin(PinE),
     /// Wrong channel for this device provided
     WrongChannel,
 }
@@ -181,7 +179,7 @@ mod private {
     use super::{ic, interface};
     pub trait Sealed {}
 
-    impl<SPI, CS> Sealed for interface::SpiInterface<SPI, CS> {}
+    impl<SPI> Sealed for interface::SpiInterface<SPI> {}
     impl Sealed for ic::Mcp41x {}
     impl Sealed for ic::Mcp42x {}
 }
