@@ -26,8 +26,6 @@ where
 
     fn write_command(&mut self, command: u8, data: u8) -> Result<(), Error<E>> {
         let payload: [u8; 2] = [command, data];
-        let result = self.spi.write(&payload).map_err(Error::Comm);
-
-        result
+        self.spi.write(&payload).map_err(Error::Comm)
     }
 }
