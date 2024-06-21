@@ -62,7 +62,7 @@
 //!
 //! mcp41x.set_position(Channel::Ch0, 125).unwrap();
 //!
-//! // Get SPI device and CS pin back
+//! // Get SPI device back
 //! let _dev = mcp41x.destroy_mcp41x();
 //! ```
 //!
