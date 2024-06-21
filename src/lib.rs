@@ -52,29 +52,32 @@
 //!
 //! ```no_run
 //! use mcp4x::{Channel, Mcp4x};
-//! use linux_embedded_hal::{Pin, Spidev};
+//! use embedded_hal_bus::spi::ExclusiveDevice;
+//! use linux_embedded_hal::{Delay, SpidevBus, SysfsPin};
 //!
-//! let spi = Spidev::open("/dev/spidev0.0").unwrap();
-//! let chip_select = Pin::new(25);
-//!
-//! let mut mcp41x = Mcp4x::new_mcp41x(spi, chip_select);
+//! let spi = SpidevBus::open("/dev/spidev0.0").unwrap();
+//! let chip_select = SysfsPin::new(25);
+//! let dev = ExclusiveDevice::new(spi, chip_select, Delay);
+//! let mut mcp41x = Mcp4x::new_mcp41x(dev);
 //!
 //! mcp41x.set_position(Channel::Ch0, 125).unwrap();
 //!
 //! // Get SPI device and CS pin back
-//! let (_spi, _chip_select) = mcp41x.destroy_mcp41x();
+//! let _dev = mcp41x.destroy_mcp41x();
 //! ```
 //!
 //! ### Set channels to positions in a MCP42x device
 //!
 //! ```no_run
+
 //! use mcp4x::{Channel, Mcp4x};
-//! use linux_embedded_hal::{Pin, Spidev};
+//! use embedded_hal_bus::spi::ExclusiveDevice;
+//! use linux_embedded_hal::{Delay, SpidevBus, SysfsPin};
 //!
-//! let spi = Spidev::open("/dev/spidev0.0").unwrap();
-//! let chip_select = Pin::new(25);
-//!
-//! let mut mcp42x = Mcp4x::new_mcp42x(spi, chip_select);
+//! let spi = SpidevBus::open("/dev/spidev0.0").unwrap();
+//! let chip_select = SysfsPin::new(25);
+//! let dev = ExclusiveDevice::new(spi, chip_select, Delay);
+//! let mut mcp42x = Mcp4x::new_mcp42x(dev);
 //!
 //! mcp42x.set_position(Channel::Ch0, 50).unwrap();
 //! mcp42x.set_position(Channel::Ch1, 50).unwrap();
@@ -83,13 +86,14 @@
 //! ### Set all channels to position in a MCP42x device
 //!
 //! ```no_run
+
 //! use mcp4x::{Channel, Mcp4x};
-//! use linux_embedded_hal::{Pin, Spidev};
-//!
-//! let spi = Spidev::open("/dev/spidev0.0").unwrap();
-//! let chip_select = Pin::new(25);
-//!
-//! let mut mcp42x = Mcp4x::new_mcp42x(spi, chip_select);
+//! use embedded_hal_bus::spi::ExclusiveDevice;
+//! use linux_embedded_hal::{Delay, SpidevBus, SysfsPin};
+//! let spi = SpidevBus::open("/dev/spidev0.0").unwrap();
+//! let chip_select = SysfsPin::new(25);
+//! let dev = ExclusiveDevice::new(spi, chip_select, Delay);
+//! let mut mcp42x = Mcp4x::new_mcp42x(dev);
 //!
 //! mcp42x.set_position(Channel::All, 50).unwrap();
 //! ```
@@ -97,13 +101,14 @@
 //! ### Shutdown a channel
 //!
 //! ```no_run
+
 //! use mcp4x::{Channel, Mcp4x};
-//! use linux_embedded_hal::{Pin, Spidev};
-//!
-//! let spi = Spidev::open("/dev/spidev0.0").unwrap();
-//! let chip_select = Pin::new(25);
-//!
-//! let mut mcp42x = Mcp4x::new_mcp42x(spi, chip_select);
+//! use embedded_hal_bus::spi::ExclusiveDevice;
+//! use linux_embedded_hal::{Delay, SpidevBus, SysfsPin};
+//! let spi = SpidevBus::open("/dev/spidev0.0").unwrap();
+//! let chip_select = SysfsPin::new(25);
+//! let dev = ExclusiveDevice::new(spi, chip_select, Delay);
+//! let mut mcp42x = Mcp4x::new_mcp42x(dev);
 //!
 //! mcp42x.shutdown(Channel::Ch0).unwrap();
 //! ```

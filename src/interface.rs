@@ -18,7 +18,7 @@ pub trait WriteCommand: private::Sealed {
     fn write_command(&mut self, command: u8, data: u8) -> Result<(), Self::Error>;
 }
 
-impl<SPI, E > WriteCommand for SpiInterface<SPI>
+impl<SPI, E> WriteCommand for SpiInterface<SPI>
 where
     SPI: SpiDevice<Error = E>,
 {

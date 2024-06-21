@@ -1,21 +1,26 @@
-use embedded_hal_mock::pin::{Mock as PinMock, State as PinState, Transaction as PinTrans};
-use embedded_hal_mock::spi::{Mock as SpiMock, Transaction as SpiTrans};
+use embedded_hal_mock::eh1::spi::{Mock as SpiMock, Transaction as SpiTrans};
 use mcp4x::{ic, interface, Channel, Error, Mcp4x};
 
 macro_rules! device_support {
     ($create:ident, $destroy:ident, $ic:ident) => {
         pub fn $create(
-            transactions: &[SpiTrans],
-        ) -> Mcp4x<interface::SpiInterface<SpiMock, PinMock>, ic::$ic> {
-            let pin_transactions: Vec<PinTrans> = transactions
+            transactions: &[SpiTrans<u8>],
+        ) -> Mcp4x<interface::SpiInterface<SpiMock<u8>>, ic::$ic> {
+            let wrapped: Vec<SpiTrans<u8>> = transactions
                 .iter()
-                .flat_map(|_| [PinTrans::set(PinState::Low), PinTrans::set(PinState::High)])
+                .flat_map(|trans| {
+                    [
+                        SpiTrans::transaction_start(),
+                        trans.clone(),
+                        SpiTrans::transaction_end(),
+                    ]
+                })
                 .collect();
-            Mcp4x::$create(SpiMock::new(transactions), PinMock::new(&pin_transactions))
+            Mcp4x::$create(SpiMock::new(&wrapped))
         }
 
-        pub fn $destroy(dev: Mcp4x<interface::SpiInterface<SpiMock, PinMock>, ic::$ic>) {
-            dev.$destroy().0.done();
+        pub fn $destroy(dev: Mcp4x<interface::SpiInterface<SpiMock<u8>>, ic::$ic>) {
+            dev.$destroy().done();
         }
     };
 }
@@ -29,7 +34,7 @@ macro_rules! test {
         $cmd:expr, $expected_value:expr, $( $arg:expr ),* ) => {
         #[test]
         fn $name() {
-            let trans = [SpiTrans::write(vec![$cmd, $expected_value])];
+            let trans = [SpiTrans::write_vec(vec![$cmd, $expected_value])];
             let mut dev = $create(&trans);
             dev.$method($($arg),*).unwrap();
             $destroy(dev);
@@ -80,7 +85,7 @@ mod mcp41x {
         Channel::All
     );
 
-    fn assert_wrong_channel<T, CommE, PinE>(result: &Result<T, Error<CommE, PinE>>) {
+    fn assert_wrong_channel<T, CommE>(result: &Result<T, Error<CommE>>) {
         match result {
             Err(Error::WrongChannel) => (),
             _ => panic!("Wrong channel not reported."),
@@ -89,27 +94,27 @@ mod mcp41x {
 
     #[test]
     fn wrong_channel_matches() {
-        assert_wrong_channel::<(), (), ()>(&Err(Error::WrongChannel));
+        assert_wrong_channel::<(), ()>(&Err(Error::WrongChannel));
     }
 
     #[should_panic]
     #[test]
     fn wrong_channel_can_fail() {
-        assert_wrong_channel::<(), (), ()>(&Ok(()));
+        assert_wrong_channel::<(), ()>(&Ok(()));
     }
 
     #[test]
     fn shutdown_cannot_provide_invalid_channel_ch1() {
         let mut dev = new_mcp41x(&[]);
         assert_wrong_channel(&dev.shutdown(Channel::Ch1));
-        dev.destroy_mcp41x().0.done();
+        dev.destroy_mcp41x().done();
     }
 
     #[test]
     fn set_position_cannot_provide_invalid_channel() {
         let mut dev = new_mcp41x(&[]);
         assert_wrong_channel(&dev.set_position(Channel::Ch1, 0));
-        dev.destroy_mcp41x().0.done();
+        dev.destroy_mcp41x().done();
     }
 }
 

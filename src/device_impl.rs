@@ -33,11 +33,7 @@ where
     ///
     /// Will return `Error::WrongChannel` if the channel provided is not available
     /// on the device.
-    pub fn set_position(
-        &mut self,
-        channel: Channel,
-        position: u8,
-    ) -> Result<(), Error<CommE>> {
+    pub fn set_position(&mut self, channel: Channel, position: u8) -> Result<(), Error<CommE>> {
         IC::check_if_channel_is_appropriate(channel)?;
         let cmd = Command::SetPosition(channel, position);
         self.iface
@@ -60,9 +56,7 @@ impl<SPI> Mcp4x<interface::SpiInterface<SPI>, ic::Mcp41x> {
     /// Create new MCP41x device instance
     pub fn new_mcp41x(spi: SPI) -> Self {
         Mcp4x {
-            iface: interface::SpiInterface {
-                spi,
-            },
+            iface: interface::SpiInterface { spi },
             _ic: PhantomData,
         }
     }
@@ -77,9 +71,7 @@ impl<SPI> Mcp4x<interface::SpiInterface<SPI>, ic::Mcp42x> {
     /// Create new MCP42x device instance
     pub fn new_mcp42x(spi: SPI) -> Self {
         Mcp4x {
-            iface: interface::SpiInterface {
-                spi,
-            },
+            iface: interface::SpiInterface { spi },
             _ic: PhantomData,
         }
     }
