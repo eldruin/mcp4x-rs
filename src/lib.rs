@@ -117,7 +117,6 @@
 #![deny(unsafe_code)]
 #![deny(missing_docs)]
 #![no_std]
-#![doc(html_root_url = "https://docs.rs/mcp4x/0.2.0")]
 
 use core::marker::PhantomData;
 use embedded_hal::spi::{Mode, MODE_0};
