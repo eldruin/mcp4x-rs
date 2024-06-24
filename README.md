@@ -59,7 +59,7 @@ Please find additional examples using hardware in this repository: [driver-examp
 use mcp4x::{Channel, Mcp4x};
 use embedded_hal_bus::spi::ExclusiveDevice;
 use linux_embedded_hal::{Delay, SpidevBus, SysfsPin};
- 
+
 fn main() {
     let spi = SpidevBus::open("/dev/spidev0.0").unwrap();
     let chip_select = SysfsPin::new(25);
@@ -75,7 +75,7 @@ fn main() {
 
 ## Support
 
-For questions, issues, feature requests, and other changes, please file an
+For questions, issues, feature requests like compatibility with similar devices and other changes, please file an
 [issue in the github project](https://github.com/eldruin/mcp4x-rs/issues).
 
 ## License
