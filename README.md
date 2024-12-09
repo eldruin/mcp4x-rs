@@ -16,6 +16,8 @@ This driver allows you to:
 - Shutdown a channel (or all of them). See: `shutdown()`.
 
 ## The devices
+
+### SPI
 The MCP41XXX and MCP42XXX devices are 256-position, digital potentiometers
 available in 10 kΩ, 50 kΩ and 100 kΩ resistance versions. The MCP41XXX is
 a single-channel device and is offered in an 8-pin PDIP or SOIC package.
@@ -42,6 +44,17 @@ MCP41100, MCP42010, MCP42050 and MCP42100.
 
 Datasheet:
 - [MCP41XXX/MCP42XXX](http://ww1.microchip.com/downloads/en/DeviceDoc/11195c.pdf)
+
+### I2C
+
+The MCP40XX device is a 128-position, digital potentiometer
+available in 5 kΩ, 10 kΩ, 50 kΩ and 100 kΩ resistance versions. The MCP40XX
+is a single-channel device and is offered in an 6-pin SC70 package.
+The wiper position of the MCP40XX varies linearly and is controlled via an
+industry-standard I2C interface.
+
+Datasheet:
+- [MCP4017/18/19](https://ww1.microchip.com/downloads/en/DeviceDoc/22147a.pdf)
 
 ## Usage
 
