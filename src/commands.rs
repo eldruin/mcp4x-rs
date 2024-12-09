@@ -2,7 +2,7 @@
 
 use crate::Channel;
 
-pub(crate) enum Command {
+pub enum Command {
     /// Set a channel to a position
     SetPosition(Channel, u8),
     /// Shutdown channel

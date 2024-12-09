@@ -128,6 +128,10 @@ pub enum Error<CommE> {
     Comm(CommE),
     /// Wrong channel for this device provided
     WrongChannel,
+    /// Unsupported feature
+    Unsupported,
+    /// Parameter out of bounds
+    OutOfBounds,
 }
 
 /// SPI mode
@@ -156,6 +160,9 @@ impl Channel {
 
 /// IC markers
 pub mod ic {
+    /// MCP401x IC marker
+    pub struct Mcp401x;
+
     /// MCP41x IC marker
     pub struct Mcp41x;
 
@@ -171,7 +178,7 @@ pub struct Mcp4x<DI, IC> {
 }
 
 mod device_impl;
-pub use crate::device_impl::CheckChannel;
+pub use crate::device_impl::CheckParameters;
 
 mod commands;
 use crate::commands::Command;
@@ -184,6 +191,8 @@ mod private {
     pub trait Sealed {}
 
     impl<SPI> Sealed for interface::SpiInterface<SPI> {}
+    impl<I2C> Sealed for interface::I2cInterface<I2C> {}
+    impl Sealed for ic::Mcp401x {}
     impl Sealed for ic::Mcp41x {}
     impl Sealed for ic::Mcp42x {}
 }
